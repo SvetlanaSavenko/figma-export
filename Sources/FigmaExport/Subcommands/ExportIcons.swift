@@ -52,6 +52,7 @@ extension FigmaExportCommand {
             let loader = ImagesLoader(client: client, params: params, platform: .ios, logger: logger)
             let imagesTuple = try loader.loadIcons(filter: filter)
 
+			logger.info("Test logs")
             logger.info("Processing icons...")
             let processor = ImagesProcessor(
                 platform: .ios,
