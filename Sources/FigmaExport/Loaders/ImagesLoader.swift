@@ -204,7 +204,7 @@ final class ImagesLoader {
     private func fetchImageComponents(fileId: String, frameName: String, filter: String? = nil) throws -> [NodeId: Component] {
         var components = try loadComponents(fileId: fileId)
             .filter {
-                $0.containingFrame.name == frameName && $0.useForPlatform(platform)
+				$0.containingFrame.name == frameName && $0.useForPlatform(platform, logger: logger)
             }
 
         if let filter {
@@ -376,23 +376,28 @@ private extension String {
 
 extension Component {
     
-    public func useForPlatform(_ platform: Platform) -> Bool {
+	public func useForPlatform(_ platform: Platform, logger: Logger) -> Bool {
         guard let description = description, !description.isEmpty else {
             return true
         }
-        
+
+		logger.info("useForPlatform: description \(description), platform \(platform.rawValue)")
+
         let keywords = ["ios", "android", "none"]
         
         let hasNotKeywords = keywords.allSatisfy { !description.contains($0) }
         if hasNotKeywords {
+			logger.info("return true")
             return true
         }
         
         if (description.contains("ios") && platform == .ios) ||
             (description.contains("android") && platform == .android) {
+			logger.info("return true description.contains ios && platform == .ios или description.contains android && platform == .android")
             return true
         }
-        
+
+		logger.info("return false")
         return false
     }
     
